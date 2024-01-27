@@ -60,12 +60,15 @@ def user_input():
             elif command == "D":  # delete DSU file
             	command_D(myPath)
             elif command == "R":  # read file contents
-            	pass
+            	command_R(myPath)
+            else:  # invalid command
+            	print("ERROR")
         else:
-            if command == "D":
+            if command == "D" or command == "R":
                 command_D(myPath)
             else:
             	print("Directory doesn't exist. Try again.")
+
 
 def list_directories(myPath):
     if any(myPath.iterdir()):  # check if directory isnt empty
@@ -159,13 +162,36 @@ def command_D(myPath):
 		dsufile = dir_list[len(dir_list)-1]
 		if not dsufile.endswith(".dsu"):  # if file isn't DSU file
 			print("ERROR")
-			user_command = input()  # keep on asking for input
-			command_list = user_command.split()
-			myPath = Path(command_list[1])
+			myPath = get_correct_file(dsufile)  # so that myPath changes 
 		else:  # file is DSU file 
 			Path.unlink(dsufile)  # delete file from path
 			print(myPath, "DELETED")  # output the path
 			break
+
+
+def command_R(myPath):
+	while True:
+		dir_list = str(myPath).split('\\')
+		dsufile = dir_list[len(dir_list)-1]
+		if not dsufile.endswith(".dsu"):  # if file isn't DSU file
+			print("ERROR")
+			myPath = get_correct_file(dsufile)
+		elif myPath.stat().st_size == 0:  # file_size = myPath.stat().st_size
+			print("EMPTY")
+			myPath = get_correct_file(dsufile)
+		else:  # print file contents
+			with open(dsufile, "r") as myFile:
+				for line in myFile:
+					line = line.strip()  # get rid of whitespace
+					print(line)
+			break
+
+
+def get_correct_file(dsufile):
+	user_command = input()  # keep on asking for input
+	command_list = user_command.split()
+	myPath = Path(command_list[1])
+	return myPath
 
 
 if __name__ == '__main__':
