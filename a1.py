@@ -54,16 +54,18 @@ def user_input():
                     elif option == '-r' and option2 == '-e':  # -r -e fileex
                         file_extension = command_list[4]
                         recursive_e(myPath, file_extension)
-            elif command == "C":  # create new file in specified dir
+            elif command == "C":  # create new DSU file
             	filename = command_list[3]
             	command_C(myPath, filename)
-            elif command == "D":  # delete file
-            	pass
+            elif command == "D":  # delete DSU file
+            	command_D(myPath)
             elif command == "R":  # read file contents
             	pass
         else:
-            print("Directory doesn't exist. Try again.")
-
+            if command == "D":
+                command_D(myPath)
+            else:
+            	print("Directory doesn't exist. Try again.")
 
 def list_directories(myPath):
     if any(myPath.iterdir()):  # check if directory isnt empty
@@ -149,6 +151,22 @@ def recursive_e(myPath, file_extension):
 def command_C(myPath, filename):
     newfile = open(filename + ".dsu", "a")
     print(str(myPath) + "\\" + filename + ".dsu")
+
+
+def command_D(myPath):
+	while True:
+		dir_list = str(myPath).split('\\')
+		dsufile = dir_list[len(dir_list)-1]
+		if not dsufile.endswith(".dsu"):  # if file isn't DSU file
+			print("ERROR")
+			user_command = input()  # keep on asking for input
+			command_list = user_command.split()
+			myPath = Path(command_list[1])
+		else:  # file is DSU file 
+			Path.unlink(dsufile)  # delete file from path
+			print(myPath, "DELETED")  # output the path
+			break
+
 
 if __name__ == '__main__':
     main()
