@@ -15,7 +15,7 @@ def main():
 def user_input():
     while True:
         user_command = input()  # format: [COMMAND] [INPUT] [[-]OPTION] [INPUT]
-        command_list = user_command.split()
+        command_list = user_command.split()  # split input at space
         command = command_list[0]
 
         if command == 'Q':
@@ -54,6 +54,13 @@ def user_input():
                     elif option == '-r' and option2 == '-e':  # -r -e fileex
                         file_extension = command_list[4]
                         recursive_e(myPath, file_extension)
+            elif command == "C":  # create new file in specified dir
+            	filename = command_list[3]
+            	command_C(myPath, filename)
+            elif command == "D":  # delete file
+            	pass
+            elif command == "R":  # read file contents
+            	pass
         else:
             print("Directory doesn't exist. Try again.")
 
@@ -138,6 +145,10 @@ def recursive_e(myPath, file_extension):
             if currentPath.is_dir():  # if a dir, call func recursively
                 recursive_e(currentPath, file_extension)
 
+
+def command_C(myPath, filename):
+    newfile = open(filename + ".dsu", "a")
+    print(str(myPath) + "\\" + filename + ".dsu")
 
 if __name__ == '__main__':
     main()
