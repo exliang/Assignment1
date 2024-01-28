@@ -34,35 +34,57 @@ def user_input():
                         recursive(myPath)
                     elif option == '-f':  # output files only
                         list_files(myPath)
+                    else:  # invalid command
+                    	print("ERROR")
                 elif len(command_list) == 4:  # [C][I][[-]O][I]
                     option = command_list[2]
                     if option == '-s':  # output files that match the file name
                         file_name = command_list[3]
-                        matching_files(myPath, file_name)
+                        if "." not in file_name:  # ensure a file is entered
+                        	print("ERROR")
+                        else:
+                        	matching_files(myPath, file_name)
                     elif option == '-e':
                         file_extension = command_list[3]
-                        matching_extension(myPath, file_extension)
+                        if len(file_extension) != 3:
+                        	print("ERROR")
+                        else:
+                        	matching_extension(myPath, file_extension)
                     elif option == '-r':  # -r -f
                         option2 = command_list[3]
                         recursive_f(myPath)
+                    else:  # invalid command
+                    	print("ERROR")
                 elif len(command_list) == 5:  # [C][I][[-]O][I][I]
                     option = command_list[2]
                     option2 = command_list[3]
                     if option == '-r' and option2 == '-s':  # -r -s filename.ex
                         file_name = command_list[4]
-                        recursive_s(myPath, file_name)
+                        if "." not in file_name:  # ensure a file is entered
+                        	print("ERROR")
+                        else:
+                        	recursive_s(myPath, file_name)
                     elif option == '-r' and option2 == '-e':  # -r -e fileex
                         file_extension = command_list[4]
-                        recursive_e(myPath, file_extension)
+                        if len(file_extension) != 3:
+                        	print("ERROR")
+                        else:
+                        	recursive_e(myPath, file_extension)
+                    else:  # invalid command
+                    	print("ERROR")
             elif command == "C":  # create new DSU file
             	filename = command_list[3]
-            	command_C(myPath, filename)
+            	if command_list[2] != "-n":
+            		print("ERROR")
+            	else:
+            		command_C(myPath, filename)
             elif command == "D":  # delete DSU file
             	command_D(myPath)
             elif command == "R":  # read file contents
             	command_R(myPath)
             else:  # invalid command
             	print("ERROR")
+            	get_correct_file()
         else:
             if command == "D" or command == "R":
                 command_D(myPath)
@@ -187,7 +209,7 @@ def command_R(myPath):
 			break
 
 
-def get_correct_file(dsufile):
+def get_correct_file(anyFile):
 	user_command = input()  # keep on asking for input
 	command_list = user_command.split()
 	myPath = Path(command_list[1])
