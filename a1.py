@@ -8,7 +8,6 @@
 from pathlib import Path, PurePath
 
 #issues: path is invalid bc there are \\ rather than \ & autograder
-# todo: readme
 
 
 def main():
