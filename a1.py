@@ -7,6 +7,9 @@
 
 from pathlib import Path, PurePath
 
+#issues: path is invalid bc there are \\ rather than \ & autograder
+# todo: readme
+
 
 def main():
     user_input()
@@ -16,13 +19,25 @@ def user_input():
     while True:
         user_command = input()  # format: [COMMAND] [INPUT] [[-]OPTION] [INPUT] 
         command_list = user_command.split()
-
-        #check if index 1 and 2 of the list 
-
         command = command_list[0]
 
         if command == 'Q':
             quit()
+
+        # ensuring proper whitespace handling
+        path = [command_list[1]]
+        space_count = 0
+        if not command_list[2].startswith("-"):  # path had whitespace in it
+        	for i in range(2, len(command_list)):
+        		if not command_list[i].startswith("-"):
+        			path.append(command_list[i])
+        			space_count += 1
+        	newpath = " ".join(path)
+        	command_list.insert(1, newpath)  # insert new path in command_list
+        	# get rid of old path in command_list (num spaces = (num spaces + 1) items in list)
+        	for i in range(space_count, -1, -1):
+        		print("command_list[i+2]",command_list[i+2])
+        		command_list.pop(i+2)
 
         path = command_list[1]
         myPath = Path(path)
