@@ -5,7 +5,7 @@
 # exliang@uci.edu
 # 79453973
 
-from pathlib import Path
+from pathlib import Path, PurePath
 
 
 def main():
@@ -14,8 +14,11 @@ def main():
 
 def user_input():
     while True:
-        user_command = input()  # format: [COMMAND] [INPUT] [[-]OPTION] [INPUT]
-        command_list = user_command.split()  # split input at space
+        user_command = input()  # format: [COMMAND] [INPUT] [[-]OPTION] [INPUT] 
+        command_list = user_command.split()
+
+        #check if index 1 and 2 of the list 
+
         command = command_list[0]
 
         if command == 'Q':
@@ -66,7 +69,7 @@ def user_input():
                         	recursive_s(myPath, file_name)
                     elif option == '-r' and option2 == '-e':  # -r -e fileex
                         file_extension = command_list[4]
-                        if len(file_extension) != 3:
+                        if file_extension.isnumeric():  #if fileex contains nums
                         	print("ERROR")
                         else:
                         	recursive_e(myPath, file_extension)
@@ -175,13 +178,12 @@ def recursive_e(myPath, file_extension):
 
 def command_C(myPath, filename):
     newfile = open(filename + ".dsu", "a")
-    print(str(myPath) + "\\" + filename + ".dsu")
+    print(myPath.joinpath(filename + ".dsu"))
 
 
 def command_D(myPath):
 	while True:
-		dir_list = str(myPath).split('\\')
-		dsufile = dir_list[len(dir_list)-1]
+		dsufile = get_path_parts(myPath)
 		if not dsufile.endswith(".dsu"):  # if file isn't DSU file
 			print("ERROR")
 			myPath = get_correct_file(dsufile)  # so that myPath changes 
@@ -193,8 +195,7 @@ def command_D(myPath):
 
 def command_R(myPath):
 	while True:
-		dir_list = str(myPath).split('\\')
-		dsufile = dir_list[len(dir_list)-1]
+		dsufile = get_path_parts(myPath)
 		if not dsufile.endswith(".dsu"):  # if file isn't DSU file
 			print("ERROR")
 			myPath = get_correct_file(dsufile)
@@ -209,11 +210,22 @@ def command_R(myPath):
 			break
 
 
-def get_correct_file(anyFile):
+def get_correct_file(dsufile):
 	user_command = input()  # keep on asking for input
 	command_list = user_command.split()
 	myPath = Path(command_list[1])
 	return myPath
+
+
+def get_path_parts(myPath):
+	p = PurePath(myPath)
+	dir_tuple = p.parts[1:]  # getting parts of dir (ignoring C:\)
+	dsufile = dir_tuple[len(dir_tuple)-1]
+	return dsufile
+
+
+def whitespace_checker():  # handling whitespace (if a file has a space in name)
+	pass
 
 
 if __name__ == '__main__':
