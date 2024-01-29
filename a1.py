@@ -204,7 +204,7 @@ def command_D(myPath):
         dsufile = get_path_parts(myPath)
         if not dsufile.endswith(".dsu"):  # if file isn't DSU file
             print("ERROR")
-            myPath = get_correct_file(dsufile)  # so that myPath changes
+            myPath = get_path(dsufile)  # so that myPath changes
         else:  # file is DSU file
             Path.unlink(dsufile)  # delete file from path
             print(myPath, "DELETED")  # output the path
@@ -216,16 +216,16 @@ def command_R(myPath):
         dsufile = get_path_parts(myPath)
         if not dsufile.endswith(".dsu"):  # if file isn't DSU file
             print("ERROR")
-            myPath = get_path()
+            myPath = get_path(dsufile)
         elif myPath.stat().st_size == 0:  # file_size = myPath.stat().st_size
             print("EMPTY")
-            myPath = get_path()
+            myPath = get_path(dsufile)
         else:  # print file contents
             print(myPath.read_text().strip())
             break
 
 
-def get_path():
+def get_path(dsufile):
     user_command = input()  # keep on asking for input
     command_list = user_command.split()
     myPath = Path(command_list[1])
