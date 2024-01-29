@@ -26,10 +26,29 @@ def user_input():
             path = command_list[1]
             myPath = Path(path)
 
+            # ensuring proper whitespace handling
+            path = [command_list[1]]  # part of path
+            for part in command_list[2:]:
+                if part.startswith("-"):  # reached next command (ex: -r)
+                    break
+                elif ("\\" in part) or ("/" in part) or ("." in part):
+                    path.append(part)  # part of path (file or dir)
+            myPath = " ".join(path)
+            for part in command_list[:]:  # copy of lst bc of indexing
+                if part.startswith("-"):  # reached next command (ex: -r)
+                    break
+                elif ("\\" in part) or ("/" in part) or ("." in part):
+                    command_list.remove(part)  # remove old path in command_lst
+            command_list.insert(1, myPath)  # insert new path into list
+            myPath = Path(myPath)  # new path
+
             if myPath.exists():  # ensure that directory exists
                 if command == 'L':  # list contents of directory
                     if len(command_list) == 2:  # [COMMAND] [INPUT]
-                        list_directories(myPath)
+                        if "." in str(myPath):  # last part is a file
+                            print("ERROR")
+                        else:
+                            list_directories(myPath)
                     elif len(command_list) == 3:  # [C] [INPUT] [[-]OPTION]
                         option = command_list[2]
                         if option == '-r':
@@ -86,7 +105,7 @@ def user_input():
                     command_R(myPath)
                 else:  # invalid command
                     print("ERROR")
-                    get_correct_file()
+                    get_path()
             else:
                 if command == "D" or command == "R":
                     command_D(myPath)
@@ -225,18 +244,3 @@ if __name__ == '__main__':
 
 # Citations:
 # - https://docs.python.org/3/library/pathlib.html
-
-# # ensuring proper whitespace handling
-# path = [command_list[1]]
-# space_count = 0
-# if not command_list[2].startswith("-"):  # path had whitespace in it
-# 	for i in range(2, len(command_list)):
-# 		if not command_list[i].startswith("-"):
-# 			path.append(command_list[i])
-# 			space_count += 1
-# 	newpath = " ".join(path)
-# 	command_list.insert(1, newpath)  # insert new path in command_list
-# 	# get rid of old path in command_list (num spaces = (num spaces + 1) items in list)
-# 	for i in range(space_count, -1, -1):
-# 		print("command_list[i+2]",command_list[i+2])
-# 		command_list.pop(i+2)
